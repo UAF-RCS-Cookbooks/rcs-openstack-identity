@@ -142,6 +142,24 @@ case node['platform_family']
 when 'rhel'
   # platform specific package and service name options
   case node['platform_version'].to_i
+  when 9
+    default['openstack']['identity']['platform'] = {
+      'memcache_python_packages' => ['python3-memcached'],
+      # TODO(ramereth): python3-urllib3 is here to workaround an issue if
+      # it's already been installed from the base repository which is
+      # incompatible with what's shipped with RDO. This should be removed
+      # once fixed upstream.
+      'keystone_packages' =>
+        %w(
+          openstack-keystone
+          openstack-selinux
+          python3-urllib3
+        ),
+      'keystone_apache2_site' => 'keystone', # currently unused on RHEL
+      'keystone_service' => 'openstack-keystone',
+      'keystone_process_name' => 'keystone-all',
+      'package_options' => '',
+    }
   when 8
     default['openstack']['identity']['platform'] = {
       'memcache_python_packages' => ['python3-memcached'],

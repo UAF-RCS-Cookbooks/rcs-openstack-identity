@@ -29,7 +29,7 @@ end
 
 # include the logging recipe from openstack-common if syslog usage is enbaled
 if node['openstack']['identity']['syslog']['use']
-  include_recipe 'openstack-common::logging'
+  include_recipe 'rcs-openstack-common::logging'
 end
 
 platform_options = node['openstack']['identity']['platform']
@@ -117,8 +117,8 @@ file '/var/lib/keystone/keystone.db' do
 end
 
 # include the recipes to setup tokens
-include_recipe 'openstack-identity::_fernet_tokens'
-include_recipe 'openstack-identity::_credential_tokens'
+include_recipe 'rcs-openstack-identity::_fernet_tokens'
+include_recipe 'rcs-openstack-identity::_credential_tokens'
 
 # define the address to bind the keystone apache public service to
 bind_service = node['openstack']['bind_service']['public']['identity']
@@ -171,7 +171,7 @@ keystone_conf_options = merge_config_options 'identity'
 # create the keystone.conf from attributes
 template '/etc/keystone/keystone.conf' do
   source 'openstack-service.conf.erb'
-  cookbook 'openstack-common'
+  cookbook 'rcs-openstack-common'
   owner keystone_user
   group keystone_group
   mode '640'
